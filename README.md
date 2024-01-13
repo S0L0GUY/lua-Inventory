@@ -8,7 +8,6 @@ Open a terminal or command prompt.
 
 Run the script using the Lua interpreter:
 
-# bash
 lua main.lua
 Follow the on-screen instructions to interact with the inventory.
 
