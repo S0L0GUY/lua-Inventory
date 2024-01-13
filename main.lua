@@ -1,0 +1,12 @@
+require("functions")
+
+print_hedder()
+print("loading...")
+os.execute("sleep 1")
+
+os.execute("clear")
+print_hedder()
+print("Welcome to Lua Invintory")
+os.execute("sleep 2")
+
+render_home()
