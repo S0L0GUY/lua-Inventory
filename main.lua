@@ -2,7 +2,6 @@ require("functions")
 
 print_hedder()
 print("loading...")
-os.execute("sleep 1")
 
 os.execute("clear")
 print_hedder()
