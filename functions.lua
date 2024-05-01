@@ -1,23 +1,27 @@
--- creates needed variadables
+-- 4/30/2024 DEBUGLIBRARY -----------------------
+debug = require("DebugLibrary") -- Imports the Debug function Library
+debug.clear()
+debug.log("successfully imported: DebugLibrary.lua")
+--------------------------------------------------
+
+-- Creates needed variadables
 inventory = {}
 inventory_count = {}
 prices = {}
 
--- rneders the home
+-- Reneders the home
 function render_home()
+  debug.log("render_home() called")
+  debug.log("rendered home")
   print_hedder()
-  os.execute("sleep 0.5") --prints the options
-  print("1.Search")
-  os.execute("sleep 0.1")
-  print("2.List")
-  os.execute("sleep 0.1")
-  print("3.Edit")
-  os.execute("sleep 0.1")
-  print("4.Add")
+  wait(0.5) --Prints the options
+  options = ["Search", "List", "Edit", "Add"]
+  print_options(options, 0.1)
+
   local user_input = io.read()
   local user_input = tonumber(user_input)
   
-  if user_input == 1 then -- prosesses the user input
+  if user_input == 1 then -- Prosesses the user input
     search()
   elseif user_input == 2  then
     list()
@@ -28,15 +32,14 @@ function render_home()
   else
     print_hedder()
     print("Sorry, that is not a valid input.")
-    os.execute("sleep 2")
+    wait(2)
     render_home()
   end
-  
 end
 
--- prints the hedder
+-- Prints the hedder
 function print_hedder()
-  os.execute("clear")
+  wait("clear")
   print("Lua Inventory" .. "                                                " .. current_time())
   print("-------------------------------------------------------------------------------------")
 end
@@ -46,28 +49,29 @@ function current_time()
   return os.date("%Y-%m-%d %H:%M")
 end
 
--- handles when the user wants to search
+-- Handles when the user wants to search
 function search()
+  debug.log("search() called")
   print_hedder()
   print("Please enter your search term:")
    local user_input = io.read()
   
   print_hedder()
 
-  if count_occurrences(inventory, user_input) < 1 then -- checks there are search results
+  if count_occurrences(inventory, user_input) < 1 then -- Checks there are search results
     print("Sorry, there are no search results here.")
-    os.execute("sleep 2")
+    wait(2)
     render_home()
-  else -- prints search results
+  else -- Prints search results
     local item_pos = find_item_position(inventory, user_input)
   print("Your search has returned " .. count_occurrences(inventory, user_input) .. " results")
-    os.execute("sleep 0.1")
+    wait(0.1)
     print(inventory[item_pos] .. " (" ..                  inventory_count[item_pos] .. ")")
-    os.execute("sleep 0.1")
+    wait(0.1)
     print("Unit Cost: $" .. prices[item_pos])
-    os.execute("sleep 0.1")
+    wait(0.1)
     print("Net Cost: $" .. prices[item_pos] * inventory_count[item_pos])
-    os.execute("sleep 0.1")
+    wait(0.1)
     print("")
     print("Press ENTER to return home.")
     
@@ -97,18 +101,19 @@ function find_item_position(list, item)
     return nil
 end
 
--- handles when the user wants to list all items
+-- Handles when the user wants to list all items
 function list()
+  debug.log("list() called")
   print_hedder()
   
-  if #inventory < 1 then -- makes shur there items to list
+  if #inventory < 1 then -- Makes shur there items to list
     print_hedder()
     print("Sorry, it seems there are no results.")
-  else -- lists all of the search results
+  else -- Lists all of the search results
     local count = 1
     print(#inventory .. " results returned:")
     for i = 1, #inventory do
-      os.execute("sleep 0.1")
+      wait(0.1)
       print(inventory[count] .. " (" .. inventory_count[count] .. ")")
       count = count + 1
     end
@@ -118,86 +123,85 @@ function list()
   render_home()
 end
 
--- prosesses when the user wants to edit 
+-- Prosesses when the user wants to edit 
 function edit()
+  debug.log("edit() called")
   print_hedder()
   print("Name of product:")
   user_input = io.read()
 
-  if count_occurrences(inventory, user_input) > 0 then -- makes shur there is no item already named user_input
+  if count_occurrences(inventory, user_input) > 0 then -- Makes shur there is no item already named user_input
     print_hedder()
     print("There are currently " .. inventory_count[find_item_position(inventory, user_input)] .. " of " .. user_input .. ".")
-    os.execute("sleep 0.1") -- prints the current options
-    print("1.Remove")
-    os.execute("sleep 0.1")
-    print("2.Change Invintory Value")
-    os.execute("sleep 0.1")
-    print("3.Change Price")
+    wait(0.1) -- Prints the current options
+    options = ["Remove", "Change Invintory Value", "Change Price"]
+    print_options(options, 0.1)
     local itemID = find_item_position(inventory, user_input)
     local item_name = inventory[itemID]
     local user_input = io.read()
     local user_input = tonumber(user_input)
 
-    -- checks user input
+    -- Checks user input
     if user_input == 1 then
-      os.execute("clear")
+      wait("clear")
       print_hedder()
       table.remove(inventory, itemID)
       table.remove(inventory_count, itemID)
       table.remove(prices, itemID)
       print(item_name .. " has been sucsessfully removed")
-      os.execute("sleep 2")
+      wait(2)
       render_home()
     elseif user_input == 2 then
-      os.execute("clear")
+      wait("clear")
       print("What value would you like to change " .. item_name .. " to")
       local user_input = io.read()
       local user_input = tonumber(user_input)
       inventory_count[itemID] = user_input
-      os.execute("clear")
+      wait("clear")
       print_hedder()
       print("The item " .. item_name .. " now has " .. user_input .. " units")
-      os.execute("sleep 2")
+      wait(2)
       render_home()
     elseif user_input == 3 then
-      os.execute("clear")
+      wait("clear")
       print("What price would you like to change " .. item_name .. " to")
       local user_input = io.read()
       local user_input = tonumber(user_input)
       prices[itemID] = user_input
-      os.execute("clear")
+      wait("clear")
       print_hedder()
       print("The item " .. item_name .. " is now $" .. user_input)
-      os.execute("sleep 2")
+      wait(2)
       render_home()
     else
       print_hedder()
       print("Sorry, that is not a valid input.")
-      os.execute("sleep 2")
+      wait(2)
       render_home()
     end
     
-  else -- prints if the input is not valid
+  else -- Prints if the input is not valid
     print_hedder()
     print("Sorry, that is not a valid input.")
-    os.execute("sleep 2")
+    wait(2)
     render_home()
   end
 end
 
--- makes a new item
+-- Makes a new item
 function add()
+  debug.log("add() called")
   print_hedder()
   print("What is the item name:")
   local user_input = io.read()
   local item_name = user_input
-  if count_occurrences(inventory, item_name) > 0 then -- makes shur there is no items already named user_input
-    os.execute("clear")
+  if count_occurrences(inventory, item_name) > 0 then -- Makes shur there is no items already named user_input
+    wait("clear")
     print_hedder()
     print("Sorry, there is alredy one of those")
-    os.execute("sleep 2")
+    wait(2)
     render_home()
-  else -- prints if there is not already an item named user_input
+  else -- Prints if there is not already an item named user_input
     table.insert(inventory, user_input)
     print_hedder()
     print("How many of this product do you have:")
@@ -209,8 +213,25 @@ function add()
     table.insert(prices, user_input)
     print_hedder()
     print(item_name .. " is now added to the list")
-    os.execute("sleep 2")
+    wait(2)
     render_home()
   end
 end
 
+function print_options(options, wait_time)
+  if type(options) == "table" then
+    for i = 1, #options do
+      print(tostring(i) .. ". " .. options[i])
+      wait(tonumber(wait_time))
+    end
+    debug.log("printed options")
+  else
+    debug.log("")
+    return "not a valad variadable type"
+  end
+end
+
+function wait(seconds)
+  local start = os.time()
+  repeat until os.time() > start + seconds
+end
